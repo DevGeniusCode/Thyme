@@ -340,6 +340,7 @@ bool is_ignore(unichar_t ch)
     bool result = ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || // English letters
         (ch >= 0x00C0 && ch <= 0x00FF) || // Latin characters
         (ch >= '0' && ch <= '9') || // Digits
+        (ch >= 0x0660 && ch <= 0x0669) || // Arabic-Indic digits
         (ch == '%') || // Percentage or format specifier
         (ch == '&')); // Special number format
     return result;
