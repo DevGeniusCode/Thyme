@@ -102,7 +102,7 @@ FILE_PATH takes any relative or absolute path.
 
 LANGUAGE:enum
 LANGUAGE takes one [1] or multiple [n] languages, separated by pipe:
-All|English|German|French|Spanish|Italian|Japanese|Korean|Chinese|Brazilian|Polish|Unknown|Russian|Arabic
+All|English|German|French|Spanish|Italian|Japanese|Korean|Chinese|Brazilian|Polish|Unknown|Russian|Arabic|Swedish
 
 OPTION:enum
 OPTION takes one [1] or multiple [n] options, separated by pipe:
