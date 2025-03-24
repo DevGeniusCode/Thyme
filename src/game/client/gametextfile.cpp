@@ -120,9 +120,9 @@ constexpr const char *const s_langcode___ = s_langcode_invalid;
 constexpr const char *const s_langcode_bp = "BP";
 constexpr const char *const s_langcode_pl = "PL";
 constexpr const char *const s_langcode_uk = s_langcode_invalid;
-constexpr const char *const s_langcode_ru = "RU";
 constexpr const char *const s_langcode_ar = "AR";
-constexpr const char *const s_langcode_se = "SE";
+constexpr const char *const s_langcode_ru = "RU";
+constexpr const char *const s_langcode_sv = "SV";
 
 constexpr const char *const s_langcodes[] = {
     s_langcode_us,
@@ -139,9 +139,9 @@ constexpr const char *const s_langcodes[] = {
     s_langcode_bp,
     s_langcode_pl,
     s_langcode_uk,
-    s_langcode_ru,
     s_langcode_ar,
-    s_langcode_se,
+    s_langcode_ru,
+    s_langcode_sv,
 };
 
 static_assert(s_langcode_us == s_langcodes[size_t(LanguageID::US)]);
@@ -158,9 +158,10 @@ static_assert(s_langcode___ == s_langcodes[size_t(LanguageID::UNUSED_1)]);
 static_assert(s_langcode_bp == s_langcodes[size_t(LanguageID::BRAZILIAN)]);
 static_assert(s_langcode_pl == s_langcodes[size_t(LanguageID::POLISH)]);
 static_assert(s_langcode_uk == s_langcodes[size_t(LanguageID::UNKNOWN)]);
-static_assert(s_langcode_ru == s_langcodes[size_t(LanguageID::RUSSIAN)]);
 static_assert(s_langcode_ar == s_langcodes[size_t(LanguageID::ARABIC)]);
-static_assert(s_langcode_se == s_langcodes[size_t(LanguageID::SWEDISH)]);
+static_assert(s_langcode_ru == s_langcodes[size_t(LanguageID::RUSSIAN)]);
+static_assert(s_langcode_sv == s_langcodes[size_t(LanguageID::SWEDISH)]);
+
 static_assert(ARRAY_SIZE(s_langcodes) == g_languageCount);
 
 constexpr const char *Get_Language_Code(LanguageID language)

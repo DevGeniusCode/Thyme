@@ -42,8 +42,8 @@ enum class LanguageID : int32_t
     UNKNOWN = 13,
 
     // Community game languages.
-    RUSSIAN = 14,
-    ARABIC = 15,
+    ARABIC = 14,
+    RUSSIAN = 15,
     SWEDISH = 16,
 
     COUNT
