@@ -138,9 +138,181 @@ constexpr const char *const s_langcode_zh = "ZH";
 constexpr const char *const s_langcode___ = s_langcode_invalid;
 constexpr const char *const s_langcode_bp = "BP";
 constexpr const char *const s_langcode_pl = "PL";
-constexpr const char *const s_langcode_uk = s_langcode_invalid;
+constexpr const char *const s_langcode_un = s_langcode_invalid;
 constexpr const char *const s_langcode_ru = "RU";
 constexpr const char *const s_langcode_ar = "AR";
+constexpr const char *const s_langcode_uk = "UK";
+constexpr const char *const s_langcode_sv = "SV";
+constexpr const char *const s_langcode_ab = "AB";
+constexpr const char *const s_langcode_aa = "AA";
+constexpr const char *const s_langcode_af = "AF";
+constexpr const char *const s_langcode_ak = "AK";
+constexpr const char *const s_langcode_sq = "SQ";
+constexpr const char *const s_langcode_am = "AM";
+constexpr const char *const s_langcode_an = "AN";
+constexpr const char *const s_langcode_hy = "HY";
+constexpr const char *const s_langcode_as = "AS";
+constexpr const char *const s_langcode_av = "AV";
+constexpr const char *const s_langcode_ae = "AE";
+constexpr const char *const s_langcode_ay = "AY";
+constexpr const char *const s_langcode_az = "AZ";
+constexpr const char *const s_langcode_bm = "BM";
+constexpr const char *const s_langcode_ba = "BA";
+constexpr const char *const s_langcode_eu = "EU";
+constexpr const char *const s_langcode_be = "BE";
+constexpr const char *const s_langcode_bn = "BN";
+constexpr const char *const s_langcode_bi = "BI";
+constexpr const char *const s_langcode_bs = "BS";
+constexpr const char *const s_langcode_br = "BR";
+constexpr const char *const s_langcode_bg = "BG";
+constexpr const char *const s_langcode_my = "MY";
+constexpr const char *const s_langcode_ca = "CA";
+constexpr const char *const s_langcode_ch = "CH";
+constexpr const char *const s_langcode_ce = "CE";
+constexpr const char *const s_langcode_ny = "NY";
+constexpr const char *const s_langcode_cu = "CU";
+constexpr const char *const s_langcode_cv = "CV";
+constexpr const char *const s_langcode_kw = "KW";
+constexpr const char *const s_langcode_co = "CO";
+constexpr const char *const s_langcode_cr = "CR";
+constexpr const char *const s_langcode_hr = "HR";
+constexpr const char *const s_langcode_cs = "CS";
+constexpr const char *const s_langcode_da = "DA";
+constexpr const char *const s_langcode_dv = "DV";
+constexpr const char *const s_langcode_nl = "NL";
+constexpr const char *const s_langcode_dz = "DZ";
+constexpr const char *const s_langcode_eo = "EO";
+constexpr const char *const s_langcode_et = "ET";
+constexpr const char *const s_langcode_ee = "EE";
+constexpr const char *const s_langcode_fo = "FO";
+constexpr const char *const s_langcode_fj = "FJ";
+constexpr const char *const s_langcode_fi = "FI";
+constexpr const char *const s_langcode_fy = "FY";
+constexpr const char *const s_langcode_ff = "FF";
+constexpr const char *const s_langcode_gd = "GD";
+constexpr const char *const s_langcode_gl = "GL";
+constexpr const char *const s_langcode_lg = "LG";
+constexpr const char *const s_langcode_ka = "KA";
+constexpr const char *const s_langcode_el = "EL";
+constexpr const char *const s_langcode_kl = "KL";
+constexpr const char *const s_langcode_gn = "GN";
+constexpr const char *const s_langcode_gu = "GU";
+constexpr const char *const s_langcode_ht = "HT";
+constexpr const char *const s_langcode_ha = "HA";
+constexpr const char *const s_langcode_he = "HE";
+constexpr const char *const s_langcode_hz = "HZ";
+constexpr const char *const s_langcode_hi = "HI";
+constexpr const char *const s_langcode_ho = "HO";
+constexpr const char *const s_langcode_hu = "HU";
+constexpr const char *const s_langcode_is = "IS";
+constexpr const char *const s_langcode_io = "IO";
+constexpr const char *const s_langcode_ig = "IG";
+constexpr const char *const s_langcode_id = "ID";
+constexpr const char *const s_langcode_iu = "IU";
+constexpr const char *const s_langcode_ik = "IK";
+constexpr const char *const s_langcode_ga = "GA";
+constexpr const char *const s_langcode_jv = "JV";
+constexpr const char *const s_langcode_kn = "KN";
+constexpr const char *const s_langcode_kr = "KR";
+constexpr const char *const s_langcode_ks = "KS";
+constexpr const char *const s_langcode_kk = "KK";
+constexpr const char *const s_langcode_km = "KM";
+constexpr const char *const s_langcode_ki = "KI";
+constexpr const char *const s_langcode_rw = "RW";
+constexpr const char *const s_langcode_ky = "KY";
+constexpr const char *const s_langcode_kv = "KV";
+constexpr const char *const s_langcode_kg = "KG";
+constexpr const char *const s_langcode_kj = "KJ";
+constexpr const char *const s_langcode_ku = "KU";
+constexpr const char *const s_langcode_lo = "LO";
+constexpr const char *const s_langcode_la = "LA";
+constexpr const char *const s_langcode_lv = "LV";
+constexpr const char *const s_langcode_li = "LI";
+constexpr const char *const s_langcode_ln = "LN";
+constexpr const char *const s_langcode_lt = "LT";
+constexpr const char *const s_langcode_lu = "LU";
+constexpr const char *const s_langcode_lb = "LB";
+constexpr const char *const s_langcode_mk = "MK";
+constexpr const char *const s_langcode_mg = "MG";
+constexpr const char *const s_langcode_ms = "MS";
+constexpr const char *const s_langcode_ml = "ML";
+constexpr const char *const s_langcode_mt = "MT";
+constexpr const char *const s_langcode_gv = "GV";
+constexpr const char *const s_langcode_mi = "MI";
+constexpr const char *const s_langcode_mr = "MR";
+constexpr const char *const s_langcode_mh = "MH";
+constexpr const char *const s_langcode_mn = "MN";
+constexpr const char *const s_langcode_na = "NA";
+constexpr const char *const s_langcode_nv = "NV";
+constexpr const char *const s_langcode_nd = "ND";
+constexpr const char *const s_langcode_nr = "NR";
+constexpr const char *const s_langcode_ng = "NG";
+constexpr const char *const s_langcode_ne = "NE";
+constexpr const char *const s_langcode_no = "NO";
+constexpr const char *const s_langcode_nb = "NB";
+constexpr const char *const s_langcode_nn = "NN";
+constexpr const char *const s_langcode_oc = "OC";
+constexpr const char *const s_langcode_oj = "OJ";
+constexpr const char *const s_langcode_or = "OR";
+constexpr const char *const s_langcode_om = "OM";
+constexpr const char *const s_langcode_os = "OS";
+constexpr const char *const s_langcode_pi = "PI";
+constexpr const char *const s_langcode_ps = "PS";
+constexpr const char *const s_langcode_fa = "FA";
+constexpr const char *const s_langcode_pt = "PT";
+constexpr const char *const s_langcode_pa = "PA";
+constexpr const char *const s_langcode_qu = "QU";
+constexpr const char *const s_langcode_ro = "RO";
+constexpr const char *const s_langcode_rm = "RM";
+constexpr const char *const s_langcode_rn = "RN";
+constexpr const char *const s_langcode_se = "SE";
+constexpr const char *const s_langcode_sm = "SM";
+constexpr const char *const s_langcode_sg = "SG";
+constexpr const char *const s_langcode_sa = "SA";
+constexpr const char *const s_langcode_sc = "SC";
+constexpr const char *const s_langcode_sr = "SR";
+constexpr const char *const s_langcode_sn = "SN";
+constexpr const char *const s_langcode_sd = "SD";
+constexpr const char *const s_langcode_si = "SI";
+constexpr const char *const s_langcode_sk = "SK";
+constexpr const char *const s_langcode_sl = "SL";
+constexpr const char *const s_langcode_so = "SO";
+constexpr const char *const s_langcode_st = "ST";
+constexpr const char *const s_langcode_su = "SU";
+constexpr const char *const s_langcode_sw = "SW";
+constexpr const char *const s_langcode_ss = "SS";
+constexpr const char *const s_langcode_tl = "TL";
+constexpr const char *const s_langcode_ty = "TY";
+constexpr const char *const s_langcode_tg = "TG";
+constexpr const char *const s_langcode_ta = "TA";
+constexpr const char *const s_langcode_tt = "TT";
+constexpr const char *const s_langcode_te = "TE";
+constexpr const char *const s_langcode_th = "TH";
+constexpr const char *const s_langcode_bo = "BO";
+constexpr const char *const s_langcode_ti = "TI";
+constexpr const char *const s_langcode_to = "TO";
+constexpr const char *const s_langcode_ts = "TS";
+constexpr const char *const s_langcode_tn = "TN";
+constexpr const char *const s_langcode_tr = "TR";
+constexpr const char *const s_langcode_tk = "TK";
+constexpr const char *const s_langcode_tw = "TW";
+constexpr const char *const s_langcode_ug = "UG";
+constexpr const char *const s_langcode_ur = "UR";
+constexpr const char *const s_langcode_uz = "UZ";
+constexpr const char *const s_langcode_ve = "VE";
+constexpr const char *const s_langcode_vi = "VI";
+constexpr const char *const s_langcode_vo = "VO";
+constexpr const char *const s_langcode_wa = "WA";
+constexpr const char *const s_langcode_cy = "CY";
+constexpr const char *const s_langcode_wo = "WO";
+constexpr const char *const s_langcode_xh = "XH";
+constexpr const char *const s_langcode_ii = "II";
+constexpr const char *const s_langcode_yi = "YI";
+constexpr const char *const s_langcode_yo = "YO";
+constexpr const char *const s_langcode_za = "ZA";
+constexpr const char *const s_langcode_zu = "ZU";
+
+
 
 constexpr const char *const s_langcodes[] = {
     s_langcode_us,
@@ -156,9 +328,181 @@ constexpr const char *const s_langcodes[] = {
     s_langcode___,
     s_langcode_bp,
     s_langcode_pl,
-    s_langcode_uk,
+    s_langcode_un,
     s_langcode_ru,
     s_langcode_ar,
+    s_langcode_uk,
+    s_langcode_sv,
+    s_langcode_ab,
+    s_langcode_aa,
+    s_langcode_af,
+    s_langcode_ak,
+    s_langcode_sq,
+    s_langcode_am,
+    s_langcode_an,
+    s_langcode_hy,
+    s_langcode_as,
+    s_langcode_av,
+    s_langcode_ae,
+    s_langcode_ay,
+    s_langcode_az,
+    s_langcode_bm,
+    s_langcode_ba,
+    s_langcode_eu,
+    s_langcode_be,
+    s_langcode_bn,
+    s_langcode_bi,
+    s_langcode_bs,
+    s_langcode_br,
+    s_langcode_bg,
+    s_langcode_my,
+    s_langcode_ca,
+    s_langcode_ch,
+    s_langcode_ce,
+    s_langcode_ny,
+    s_langcode_cu,
+    s_langcode_cv,
+    s_langcode_kw,
+    s_langcode_co,
+    s_langcode_cr,
+    s_langcode_hr,
+    s_langcode_cs,
+    s_langcode_da,
+    s_langcode_dv,
+    s_langcode_nl,
+    s_langcode_dz,
+    s_langcode_eo,
+    s_langcode_et,
+    s_langcode_ee,
+    s_langcode_fo,
+    s_langcode_fj,
+    s_langcode_fi,
+    s_langcode_fy,
+    s_langcode_ff,
+    s_langcode_gd,
+    s_langcode_gl,
+    s_langcode_lg,
+    s_langcode_ka,
+    s_langcode_el,
+    s_langcode_kl,
+    s_langcode_gn,
+    s_langcode_gu,
+    s_langcode_ht,
+    s_langcode_ha,
+    s_langcode_he,
+    s_langcode_hz,
+    s_langcode_hi,
+    s_langcode_ho,
+    s_langcode_hu,
+    s_langcode_is,
+    s_langcode_io,
+    s_langcode_ig,
+    s_langcode_id,
+    s_langcode_iu,
+    s_langcode_ik,
+    s_langcode_ga,
+    s_langcode_jv,
+    s_langcode_kn,
+    s_langcode_kr,
+    s_langcode_ks,
+    s_langcode_kk,
+    s_langcode_km,
+    s_langcode_ki,
+    s_langcode_rw,
+    s_langcode_ky,
+    s_langcode_kv,
+    s_langcode_kg,
+    s_langcode_kj,
+    s_langcode_ku,
+    s_langcode_lo,
+    s_langcode_la,
+    s_langcode_lv,
+    s_langcode_li,
+    s_langcode_ln,
+    s_langcode_lt,
+    s_langcode_lu,
+    s_langcode_lb,
+    s_langcode_mk,
+    s_langcode_mg,
+    s_langcode_ms,
+    s_langcode_ml,
+    s_langcode_mt,
+    s_langcode_gv,
+    s_langcode_mi,
+    s_langcode_mr,
+    s_langcode_mh,
+    s_langcode_mn,
+    s_langcode_na,
+    s_langcode_nv,
+    s_langcode_nd,
+    s_langcode_nr,
+    s_langcode_ng,
+    s_langcode_ne,
+    s_langcode_no,
+    s_langcode_nb,
+    s_langcode_nn,
+    s_langcode_oc,
+    s_langcode_oj,
+    s_langcode_or,
+    s_langcode_om,
+    s_langcode_os,
+    s_langcode_pi,
+    s_langcode_ps,
+    s_langcode_fa,
+    s_langcode_pt,
+    s_langcode_pa,
+    s_langcode_qu,
+    s_langcode_ro,
+    s_langcode_rm,
+    s_langcode_rn,
+    s_langcode_se,
+    s_langcode_sm,
+    s_langcode_sg,
+    s_langcode_sa,
+    s_langcode_sc,
+    s_langcode_sr,
+    s_langcode_sn,
+    s_langcode_sd,
+    s_langcode_si,
+    s_langcode_sk,
+    s_langcode_sl,
+    s_langcode_so,
+    s_langcode_st,
+    s_langcode_su,
+    s_langcode_sw,
+    s_langcode_ss,
+    s_langcode_tl,
+    s_langcode_ty,
+    s_langcode_tg,
+    s_langcode_ta,
+    s_langcode_tt,
+    s_langcode_te,
+    s_langcode_th,
+    s_langcode_bo,
+    s_langcode_ti,
+    s_langcode_to,
+    s_langcode_ts,
+    s_langcode_tn,
+    s_langcode_tr,
+    s_langcode_tk,
+    s_langcode_tw,
+    s_langcode_ug,
+    s_langcode_ur,
+    s_langcode_uz,
+    s_langcode_ve,
+    s_langcode_vi,
+    s_langcode_vo,
+    s_langcode_wa,
+    s_langcode_cy,
+    s_langcode_wo,
+    s_langcode_xh,
+    s_langcode_ii,
+    s_langcode_yi,
+    s_langcode_yo,
+    s_langcode_za,
+    s_langcode_zu
+
+
 };
 
 static_assert(s_langcode_us == s_langcodes[size_t(LanguageID::US)]);
@@ -174,9 +518,180 @@ static_assert(s_langcode_zh == s_langcodes[size_t(LanguageID::CHINESE)]);
 static_assert(s_langcode___ == s_langcodes[size_t(LanguageID::UNUSED_1)]);
 static_assert(s_langcode_bp == s_langcodes[size_t(LanguageID::BRAZILIAN)]);
 static_assert(s_langcode_pl == s_langcodes[size_t(LanguageID::POLISH)]);
-static_assert(s_langcode_uk == s_langcodes[size_t(LanguageID::UNKNOWN)]);
+static_assert(s_langcode_un == s_langcodes[size_t(LanguageID::UNKNOWN)]);
 static_assert(s_langcode_ru == s_langcodes[size_t(LanguageID::RUSSIAN)]);
 static_assert(s_langcode_ar == s_langcodes[size_t(LanguageID::ARABIC)]);
+static_assert(s_langcode_uk == s_langcodes[size_t(LanguageID::UKRAINIAN)]);
+static_assert(s_langcode_sv == s_langcodes[size_t(LanguageID::SWEDISH)]);
+static_assert(s_langcode_ab == s_langcodes[size_t(LanguageID::ABKHAZIAN)]);
+static_assert(s_langcode_aa == s_langcodes[size_t(LanguageID::AFAR)]);
+static_assert(s_langcode_af == s_langcodes[size_t(LanguageID::AFRIKAANS)]);
+static_assert(s_langcode_ak == s_langcodes[size_t(LanguageID::AKAN)]);
+static_assert(s_langcode_sq == s_langcodes[size_t(LanguageID::ALBANIAN)]);
+static_assert(s_langcode_am == s_langcodes[size_t(LanguageID::AMHARIC)]);
+static_assert(s_langcode_an == s_langcodes[size_t(LanguageID::ARAGONESE)]);
+static_assert(s_langcode_hy == s_langcodes[size_t(LanguageID::ARMENIAN)]);
+static_assert(s_langcode_as == s_langcodes[size_t(LanguageID::ASSAMESE)]);
+static_assert(s_langcode_av == s_langcodes[size_t(LanguageID::AVARIC)]);
+static_assert(s_langcode_ae == s_langcodes[size_t(LanguageID::AVESTAN)]);
+static_assert(s_langcode_ay == s_langcodes[size_t(LanguageID::AYMARA)]);
+static_assert(s_langcode_az == s_langcodes[size_t(LanguageID::AZERBAIJANI)]);
+static_assert(s_langcode_bm == s_langcodes[size_t(LanguageID::BAMBARA)]);
+static_assert(s_langcode_ba == s_langcodes[size_t(LanguageID::BASHKIR)]);
+static_assert(s_langcode_eu == s_langcodes[size_t(LanguageID::BASQUE)]);
+static_assert(s_langcode_be == s_langcodes[size_t(LanguageID::BELARUSIAN)]);
+static_assert(s_langcode_bn == s_langcodes[size_t(LanguageID::BENGALI)]);
+static_assert(s_langcode_bi == s_langcodes[size_t(LanguageID::BISLAMA)]);
+static_assert(s_langcode_bs == s_langcodes[size_t(LanguageID::BOSNIAN)]);
+static_assert(s_langcode_br == s_langcodes[size_t(LanguageID::BRETON)]);
+static_assert(s_langcode_bg == s_langcodes[size_t(LanguageID::BULGARIAN)]);
+static_assert(s_langcode_my == s_langcodes[size_t(LanguageID::BURMESE)]);
+static_assert(s_langcode_ca == s_langcodes[size_t(LanguageID::CATALAN)]);
+static_assert(s_langcode_ch == s_langcodes[size_t(LanguageID::CHAMORRO)]);
+static_assert(s_langcode_ce == s_langcodes[size_t(LanguageID::CHECHEN)]);
+static_assert(s_langcode_ny == s_langcodes[size_t(LanguageID::CHICHEWA)]);
+static_assert(s_langcode_cu == s_langcodes[size_t(LanguageID::SLAVONIC)]);
+static_assert(s_langcode_cv == s_langcodes[size_t(LanguageID::CHUVASH)]);
+static_assert(s_langcode_kw == s_langcodes[size_t(LanguageID::CORNISH)]);
+static_assert(s_langcode_co == s_langcodes[size_t(LanguageID::CORSICAN)]);
+static_assert(s_langcode_cr == s_langcodes[size_t(LanguageID::CREE)]);
+static_assert(s_langcode_hr == s_langcodes[size_t(LanguageID::CROATIAN)]);
+static_assert(s_langcode_cs == s_langcodes[size_t(LanguageID::CZECH)]);
+static_assert(s_langcode_da == s_langcodes[size_t(LanguageID::DANISH)]);
+static_assert(s_langcode_dv == s_langcodes[size_t(LanguageID::DIVEHI)]);
+static_assert(s_langcode_nl == s_langcodes[size_t(LanguageID::DUTCH)]);
+static_assert(s_langcode_dz == s_langcodes[size_t(LanguageID::DZONGKHA)]);
+static_assert(s_langcode_eo == s_langcodes[size_t(LanguageID::ESPERANTO)]);
+static_assert(s_langcode_et == s_langcodes[size_t(LanguageID::ESTONIAN)]);
+static_assert(s_langcode_ee == s_langcodes[size_t(LanguageID::EWE)]);
+static_assert(s_langcode_fo == s_langcodes[size_t(LanguageID::FAROESE)]);
+static_assert(s_langcode_fj == s_langcodes[size_t(LanguageID::FIJIAN)]);
+static_assert(s_langcode_fi == s_langcodes[size_t(LanguageID::FINNISH)]);
+static_assert(s_langcode_fy == s_langcodes[size_t(LanguageID::FRISIAN)]);
+static_assert(s_langcode_ff == s_langcodes[size_t(LanguageID::FULAH)]);
+static_assert(s_langcode_gd == s_langcodes[size_t(LanguageID::GAELIC)]);
+static_assert(s_langcode_gl == s_langcodes[size_t(LanguageID::GALICIAN)]);
+static_assert(s_langcode_lg == s_langcodes[size_t(LanguageID::GANDA)]);
+static_assert(s_langcode_ka == s_langcodes[size_t(LanguageID::GEORGIAN)]);
+static_assert(s_langcode_el == s_langcodes[size_t(LanguageID::GREEK)]);
+static_assert(s_langcode_kl == s_langcodes[size_t(LanguageID::KALAALLISUT)]);
+static_assert(s_langcode_gn == s_langcodes[size_t(LanguageID::GUARANI)]);
+static_assert(s_langcode_gu == s_langcodes[size_t(LanguageID::GUJARATI)]);
+static_assert(s_langcode_ht == s_langcodes[size_t(LanguageID::HAITIAN)]);
+static_assert(s_langcode_ha == s_langcodes[size_t(LanguageID::HAUSA)]);
+static_assert(s_langcode_he == s_langcodes[size_t(LanguageID::HEBREW)]);
+static_assert(s_langcode_hz == s_langcodes[size_t(LanguageID::HERERO)]);
+static_assert(s_langcode_hi == s_langcodes[size_t(LanguageID::HINDI)]);
+static_assert(s_langcode_ho == s_langcodes[size_t(LanguageID::HIRIMOTU)]);
+static_assert(s_langcode_hu == s_langcodes[size_t(LanguageID::HUNGARIAN)]);
+static_assert(s_langcode_is == s_langcodes[size_t(LanguageID::ICELANDIC)]);
+static_assert(s_langcode_io == s_langcodes[size_t(LanguageID::IDO)]);
+static_assert(s_langcode_ig == s_langcodes[size_t(LanguageID::IGBO)]);
+static_assert(s_langcode_id == s_langcodes[size_t(LanguageID::INDONESIAN)]);
+static_assert(s_langcode_iu == s_langcodes[size_t(LanguageID::INUKTITUT)]);
+static_assert(s_langcode_ik == s_langcodes[size_t(LanguageID::INUPIAQ)]);
+static_assert(s_langcode_ga == s_langcodes[size_t(LanguageID::IRISH)]);
+static_assert(s_langcode_jv == s_langcodes[size_t(LanguageID::JAVANESE)]);
+static_assert(s_langcode_kn == s_langcodes[size_t(LanguageID::KANNADA)]);
+static_assert(s_langcode_kr == s_langcodes[size_t(LanguageID::KANURI)]);
+static_assert(s_langcode_ks == s_langcodes[size_t(LanguageID::KASHMIRI)]);
+static_assert(s_langcode_kk == s_langcodes[size_t(LanguageID::KAZAKH)]);
+static_assert(s_langcode_km == s_langcodes[size_t(LanguageID::KHMER)]);
+static_assert(s_langcode_ki == s_langcodes[size_t(LanguageID::KIKUYU)]);
+static_assert(s_langcode_rw == s_langcodes[size_t(LanguageID::KINYARWANDA)]);
+static_assert(s_langcode_ky == s_langcodes[size_t(LanguageID::KYRGYZ)]);
+static_assert(s_langcode_kv == s_langcodes[size_t(LanguageID::KOMI)]);
+static_assert(s_langcode_kg == s_langcodes[size_t(LanguageID::KONGO)]);
+static_assert(s_langcode_kj == s_langcodes[size_t(LanguageID::KUANYAMA)]);
+static_assert(s_langcode_ku == s_langcodes[size_t(LanguageID::KURDISH)]);
+static_assert(s_langcode_lo == s_langcodes[size_t(LanguageID::LAO)]);
+static_assert(s_langcode_la == s_langcodes[size_t(LanguageID::LATIN)]);
+static_assert(s_langcode_lv == s_langcodes[size_t(LanguageID::LATVIAN)]);
+static_assert(s_langcode_li == s_langcodes[size_t(LanguageID::LIMBURGAN)]);
+static_assert(s_langcode_ln == s_langcodes[size_t(LanguageID::LINGALA)]);
+static_assert(s_langcode_lt == s_langcodes[size_t(LanguageID::LITHUANIAN)]);
+static_assert(s_langcode_lu == s_langcodes[size_t(LanguageID::LUBAKATANGA)]);
+static_assert(s_langcode_lb == s_langcodes[size_t(LanguageID::LUXEMBOURGISH)]);
+static_assert(s_langcode_mk == s_langcodes[size_t(LanguageID::MACEDONIAN)]);
+static_assert(s_langcode_mg == s_langcodes[size_t(LanguageID::MALAGASY)]);
+static_assert(s_langcode_ms == s_langcodes[size_t(LanguageID::MALAY)]);
+static_assert(s_langcode_ml == s_langcodes[size_t(LanguageID::MALAYALAM)]);
+static_assert(s_langcode_mt == s_langcodes[size_t(LanguageID::MALTESE)]);
+static_assert(s_langcode_gv == s_langcodes[size_t(LanguageID::MANX)]);
+static_assert(s_langcode_mi == s_langcodes[size_t(LanguageID::MAORI)]);
+static_assert(s_langcode_mr == s_langcodes[size_t(LanguageID::MARATHI)]);
+static_assert(s_langcode_mh == s_langcodes[size_t(LanguageID::MARSHALLESE)]);
+static_assert(s_langcode_mn == s_langcodes[size_t(LanguageID::MONGOLIAN)]);
+static_assert(s_langcode_na == s_langcodes[size_t(LanguageID::NAURU)]);
+static_assert(s_langcode_nv == s_langcodes[size_t(LanguageID::NAVAJO)]);
+static_assert(s_langcode_nd == s_langcodes[size_t(LanguageID::NORTHNDEBELE)]);
+static_assert(s_langcode_nr == s_langcodes[size_t(LanguageID::SOUTHNDEBELE)]);
+static_assert(s_langcode_ng == s_langcodes[size_t(LanguageID::NDONGA)]);
+static_assert(s_langcode_ne == s_langcodes[size_t(LanguageID::NEPALI)]);
+static_assert(s_langcode_no == s_langcodes[size_t(LanguageID::NORWEGIAN)]);
+static_assert(s_langcode_nb == s_langcodes[size_t(LanguageID::NORWEGIANBOKMAL)]);
+static_assert(s_langcode_nn == s_langcodes[size_t(LanguageID::NORWEGIANNYNORSK)]);
+static_assert(s_langcode_oc == s_langcodes[size_t(LanguageID::OCCITAN)]);
+static_assert(s_langcode_oj == s_langcodes[size_t(LanguageID::OJIBWA)]);
+static_assert(s_langcode_or == s_langcodes[size_t(LanguageID::ORIYA)]);
+static_assert(s_langcode_om == s_langcodes[size_t(LanguageID::OROMO)]);
+static_assert(s_langcode_os == s_langcodes[size_t(LanguageID::OSSETIAN)]);
+static_assert(s_langcode_pi == s_langcodes[size_t(LanguageID::PALI)]);
+static_assert(s_langcode_ps == s_langcodes[size_t(LanguageID::PASHTO)]);
+static_assert(s_langcode_fa == s_langcodes[size_t(LanguageID::PERSIAN)]);
+static_assert(s_langcode_pt == s_langcodes[size_t(LanguageID::PORTUGUESE)]);
+static_assert(s_langcode_pa == s_langcodes[size_t(LanguageID::PUNJABI)]);
+static_assert(s_langcode_qu == s_langcodes[size_t(LanguageID::QUECHUA)]);
+static_assert(s_langcode_ro == s_langcodes[size_t(LanguageID::ROMANIAN)]);
+static_assert(s_langcode_rm == s_langcodes[size_t(LanguageID::ROMANSH)]);
+static_assert(s_langcode_rn == s_langcodes[size_t(LanguageID::RUNDI)]);
+static_assert(s_langcode_se == s_langcodes[size_t(LanguageID::SAMI)]);
+static_assert(s_langcode_sm == s_langcodes[size_t(LanguageID::SAMOAN)]);
+static_assert(s_langcode_sg == s_langcodes[size_t(LanguageID::SANGO)]);
+static_assert(s_langcode_sa == s_langcodes[size_t(LanguageID::SANSKRIT)]);
+static_assert(s_langcode_sc == s_langcodes[size_t(LanguageID::SARDINIAN)]);
+static_assert(s_langcode_sr == s_langcodes[size_t(LanguageID::SERBIAN)]);
+static_assert(s_langcode_sn == s_langcodes[size_t(LanguageID::SHONA)]);
+static_assert(s_langcode_sd == s_langcodes[size_t(LanguageID::SINDHI)]);
+static_assert(s_langcode_si == s_langcodes[size_t(LanguageID::SINHALA)]);
+static_assert(s_langcode_sk == s_langcodes[size_t(LanguageID::SLOVAK)]);
+static_assert(s_langcode_sl == s_langcodes[size_t(LanguageID::SLOVENIAN)]);
+static_assert(s_langcode_so == s_langcodes[size_t(LanguageID::SOMALI)]);
+static_assert(s_langcode_st == s_langcodes[size_t(LanguageID::SOUTHERNSOTHO)]);
+static_assert(s_langcode_su == s_langcodes[size_t(LanguageID::SUNDANESE)]);
+static_assert(s_langcode_sw == s_langcodes[size_t(LanguageID::SWAHILI)]);
+static_assert(s_langcode_ss == s_langcodes[size_t(LanguageID::SWATI)]);
+static_assert(s_langcode_tl == s_langcodes[size_t(LanguageID::TAGALOG)]);
+static_assert(s_langcode_ty == s_langcodes[size_t(LanguageID::TAHITIAN)]);
+static_assert(s_langcode_tg == s_langcodes[size_t(LanguageID::TAJIK)]);
+static_assert(s_langcode_ta == s_langcodes[size_t(LanguageID::TAMIL)]);
+static_assert(s_langcode_tt == s_langcodes[size_t(LanguageID::TATAR)]);
+static_assert(s_langcode_te == s_langcodes[size_t(LanguageID::TELUGU)]);
+static_assert(s_langcode_th == s_langcodes[size_t(LanguageID::THAI)]);
+static_assert(s_langcode_bo == s_langcodes[size_t(LanguageID::TIBETAN)]);
+static_assert(s_langcode_ti == s_langcodes[size_t(LanguageID::TIGRINYA)]);
+static_assert(s_langcode_to == s_langcodes[size_t(LanguageID::TONGA)]);
+static_assert(s_langcode_ts == s_langcodes[size_t(LanguageID::TSONGA)]);
+static_assert(s_langcode_tn == s_langcodes[size_t(LanguageID::TSWANA)]);
+static_assert(s_langcode_tr == s_langcodes[size_t(LanguageID::TURKISH)]);
+static_assert(s_langcode_tk == s_langcodes[size_t(LanguageID::TURKMEN)]);
+static_assert(s_langcode_tw == s_langcodes[size_t(LanguageID::TWI)]);
+static_assert(s_langcode_ug == s_langcodes[size_t(LanguageID::UIGHUR)]);
+static_assert(s_langcode_ur == s_langcodes[size_t(LanguageID::URDU)]);
+static_assert(s_langcode_uz == s_langcodes[size_t(LanguageID::UZBEK)]);
+static_assert(s_langcode_ve == s_langcodes[size_t(LanguageID::VENDA)]);
+static_assert(s_langcode_vi == s_langcodes[size_t(LanguageID::VIETNAMESE)]);
+static_assert(s_langcode_vo == s_langcodes[size_t(LanguageID::VOLAPUK)]);
+static_assert(s_langcode_wa == s_langcodes[size_t(LanguageID::WALLOON)]);
+static_assert(s_langcode_cy == s_langcodes[size_t(LanguageID::WELSH)]);
+static_assert(s_langcode_wo == s_langcodes[size_t(LanguageID::WOLOF)]);
+static_assert(s_langcode_xh == s_langcodes[size_t(LanguageID::XHOSA)]);
+static_assert(s_langcode_ii == s_langcodes[size_t(LanguageID::SICHUANYI)]);
+static_assert(s_langcode_yi == s_langcodes[size_t(LanguageID::YIDDISH)]);
+static_assert(s_langcode_yo == s_langcodes[size_t(LanguageID::YORUBA)]);
+static_assert(s_langcode_za == s_langcodes[size_t(LanguageID::ZHUANG)]);
+static_assert(s_langcode_zu == s_langcodes[size_t(LanguageID::ZULU)]);
+
 
 static_assert(ARRAY_SIZE(s_langcodes) == g_languageCount);
 
