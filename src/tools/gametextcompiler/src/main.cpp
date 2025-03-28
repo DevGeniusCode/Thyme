@@ -102,7 +102,7 @@ FILE_PATH takes any relative or absolute path.
 
 LANGUAGE:enum
 LANGUAGE takes one [1] or multiple [n] languages, separated by pipe:
-All|English|German|French|Spanish|Italian|Japanese|Korean|Chinese|Brazilian|Polish|Unknown|Russian|Arabic
+All|English|German|French|Spanish|Italian|Japanese|Korean|Chinese|Brazilian|Polish|Unknown|Russian|Arabic|Ukrainian|Swedish|Abkhazian|Afar|Afrikaans|Akan|Albanian|Amharic|Aragonese|Armenian|Assamese|Avaric|Avestan|Aymara|Azerbaijani|Bambara|Bashkir|Basque|Belarusian|Bengali|Bislama|Bosnian|Breton|Bulgarian|Burmese|Catalan|Chamorro|Chechen|Chichewa|Slavonic|Chuvash|Cornish|Corsican|Cree|Croatian|Czech|Danish|Divehi|Dutch|Dzongkha|Esperanto|Estonian|Ewe|Faroese|Fijian|Finnish|Frisian|Fulah|Gaelic|Galician|Ganda|Georgian|Greek|Kalaallisut|Guarani|Gujarati|Haitian|Hausa|Hebrew|Herero|Hindi|HiriMotu|Hungarian|Icelandic|Ido|Igbo|Indonesian|Inuktitut|Inupiaq|Irish|Javanese|Kannada|Kanuri|Kashmiri|Kazakh|Khmer|Kikuyu|Kinyarwanda|Kyrgyz|Komi|Kongo|Kuanyama|Kurdish|Lao|Latin|Latvian|Limburgan|Lingala|Lithuanian|LubaKatanga|Luxembourgish|Macedonian|Malay|Malayalam|Maltese|Manx|Maori|Marathi|Marshallese|Mongolian|Nauru|Navajo|NorthNdebele|SouthNdebele|Ndonga|Nepali|Norwegian|NorwegianBokmal|NorwegianNynorsk|Occitan|Ojibwa|Oriya|Oromo|Ossetian|Pali|Pashto|Persian|Portuguese|Punjabi|Quechua|Romanian|Romansh|Rundi|Sami|Samoan|Sango|Sanskrit|Sardinian|Serbian|Shona|Sindhi|Sinhala|Slovak|Slovenian|Somali|SouthernSotho|Sundanese|Swahili|Swati|Tagalog|Tahitian|Tajik|Tamil|Tatar|Telugu|Thai|Tibetan|Tigrinya|Tonga|Tsonga|Tswana|Turkish|Turkmen|Twi|Uighur|Urdu|Uzbek|Venda|Vietnamese|Volapuk|Walloon|Welsh|Wolof|Xhosa|SichuanYi|Yiddish|Yoruba|Zhuang|Zulu
 
 OPTION:enum
 OPTION takes one [1] or multiple [n] options, separated by pipe:
@@ -219,7 +219,7 @@ struct EngineSystemsCreator
 
 int main(int argc, const char *argv[])
 {
-    Print_Line("Game Text Compiler 1.1 by The Assembly Armada");
+    Print_Line("Game Text Compiler 1.2 by The Assembly Armada");
 
     if (argc < 2) {
         Print_Help();
