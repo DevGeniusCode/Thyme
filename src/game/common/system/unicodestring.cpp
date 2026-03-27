@@ -18,8 +18,13 @@
 #include "memdynalloc.h"
 #include <captainslog.h>
 #include <stdio.h>
+#include <algorithm>
+#include <vector>
 
-#if !defined BUILD_WITH_ICU && defined PLATFORM_WINDOWS
+#if defined BUILD_WITH_ICU
+#include <unicode/ustring.h>
+#include <unicode/ubidi.h>
+#elif defined PLATFORM_WINDOWS
 #include <wctype.h>
 #endif
 
@@ -334,245 +339,303 @@ void Utf16String::Trim()
     }
 }
 
-// Helper function to check if a character is considered "ignored"
-bool is_ignore(unichar_t ch)
-{
-    bool result = ((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z') || // English letters
-        (ch >= 0x00C0 && ch <= 0x00FF) || // Latin characters
-        (ch >= '0' && ch <= '9') || // Digits
-        (ch >= 0x0660 && ch <= 0x0669) || // Arabic-Indic digits
-        (ch == '%') || // Percentage or format specifier
-        (ch == '&')); // Special number format
-    return result;
-}
+namespace {
 
-bool is_special(unichar_t ch)
-{
-    // Check if character is a special character (comma, period, colon etc.)
-    bool result = (ch == ',' || ch == '.' || ch == ':' || ch == '\'' || ch == '\"' || ch == '(' || ch == ')' || ch == '['
-        || ch == ']' || ch == '{' || ch == '}' || ch == '<' || ch == '>' || ch == '?' || ch == '!' || ch == ';' || ch == '/'
-        || ch == '+' || ch == '|' || ch == '@' || ch == '#' || ch == '$' || ch == '=' || ch == '*' || ch == '~' || ch == '`'
-        || ch == '_' || ch == '-'
-        || ch == 0x00A9 /*©*/ || ch == 0x201D /*”*/ || ch == 0x2019 /*’*/ || ch == 0x201C /*“*/ || ch == 0x2018 /*‘*/);
+/**
+ * @section SAGE_RTL_SYSTEM SAGE Engine Hebrew RTL-to-Visual Conversion System
+ * * OVERVIEW:
+ * The SAGE engine renders text strictly from Left-to-Right (LTR). To support Right-to-Left (RTL)
+ * languages like Hebrew, we must pre-process strings into a "Visual" layout.
+ * A simple character reversal is insufficient because it breaks numbers, punctuation,
+ * and engine-specific placeholders.
+ *
+ * THE CORE CHALLENGE: "Atomic Tokens"
+ * The engine utilizes custom placeholders (e.g., {%s}, {&G}, {\n}, %02d) for dynamic
+ * data injection and UI formatting. A naive reversal would turn "{%s}" into "s%{",
+ * which the engine's parser would fail to recognize, leading to broken UI and missing data.
+ *
+ * THE SOLUTION: Token-Safe BiDi Pipeline
+ * This implementation follows a 4-stage pipeline to ensure linguistic correctness
+ * while preserving engine-level logic:
+ *
+ * 1. TOKEN IDENTIFICATION (is_token_at):
+ * The string is scanned for SAGE-specific patterns (bracketed variables, printf
+ * specifiers, and UI hotkeys).
+ *
+ * 2. PUA MASKING (ProcessBiDiLine - Phase 1):
+ * Each identified token is "masked" by replacing it with a single character from the
+ * Unicode Private Use Area (PUA), starting at 0xE000. Since these are single characters,
+ * they are immune to internal reversal. By treating them as LTR-strong characters,
+ * we ensure the BiDi algorithm positions them correctly relative to Hebrew text.
+ *
+ * 3. REORDERING (ICU or Fallback):
+ * - If BUILD_WITH_ICU is defined: Uses the industry-standard Unicode Bidirectional
+ * Algorithm (ubidi_writeReordered) to handle mirroring (e.g., parentheses),
+ * numeric runs, and neutral character bias.
+ * - Fallback: A manual algorithm that mirrors specific brackets and ensures
+ * alphanumeric runs (numbers/English) stay LTR within the reversed Hebrew string.
+ *
+ * 4. TOKEN EXPANSION (ProcessBiDiLine - Phase 2):
+ * The PUA characters are replaced back with their original, uncorrupted
+ * multi-character sequences (e.g., 0xE000 -> "{%s}").
+ *
+ * VERTICAL INTEGRITY (Utf16String::Reverse):
+ * To prevent the entire document from being inverted vertically, the system processes
+ * text line-by-line. It recognizes both standard '\n' and the engine's legacy "{\n}"
+ * tag as valid line boundaries, ensuring the top-to-bottom reading order is preserved.
+ *
+ * TEST CASES:
+ * - Input (Logical):  "Price: {%d} credits"
+ * - Output (Visual): "credits {%d} :Price" (Assuming Hebrew words for Price/Credits)
+ * - Input (Logical):  "Class "A""
+ * - Output (Visual): ""A" ssalC" (With correct quote mirroring)
+ */
 
-    return result;
-}
-
-// Helper function to check if a character is "ignored" or a special character
-bool is_ignored_or_special(unichar_t ch)
-{
-    return is_ignore(ch) || is_special(ch);
-}
-
-Utf16String ignore_sequence(unichar_t *buffer, size_t *start, size_t end)
-{
-    Utf16String ignore_part;
-    size_t i = (*start);
-    while (i <= end) {
-        // Skip ignored sequences and their associated special characters
-        if (is_ignore(buffer[i]) || i + 1 <= end && is_special(buffer[i]) && is_ignore(buffer[i + 1])) {
-            // Skip any leading special characters that are part of the ignored sequence (e.g., "[Game]", "[+12]")
-            while (i <= end && is_ignore(buffer[i])
-                || i + 1 <= end && is_special(buffer[i]) && is_ignore(buffer[i + 1])) {
-                ignore_part += buffer[i];
-                i++;
+// Checks for explicit SAGE engine placeholders so they can be isolated from BiDi logic.
+static bool is_token_at(const unichar_t* str, size_t i, size_t len, size_t& out_len) {
+    if (str[i] == '{') {
+        // Matches engine placeholders like {%s}, {&G}, {%.0f%%}
+        if (i + 1 < len && (str[i+1] == '%' || str[i+1] == '&')) {
+            size_t j = i + 2;
+            while (j < len && str[j] != '}') j++;
+            if (j < len && str[j] == '}') {
+                out_len = j - i + 1;
+                return true;
             }
-            // Move back to the last valid "ignored" character
-            i--;
-            // Skip any trailing special characters that are *between* of the ignored sequence  (e.g., "24[:]00")
-            if (i + 2 <= end && is_special(buffer[i + 1]) && is_ignore(buffer[i + 2])) {
-                i++;
-                ignore_part += buffer[i];
-            }
-            // Skip any spaces that are *between of the "ignored" sequence (e.g., "Game[ ]Over")
-            else if (i + 2 <= end && buffer[i + 1] == ' ' && is_ignore(buffer[i + 2])) {
-                i++;
-                ignore_part += buffer[i];
-            }
-            // Skip any spaces and punctuation that are part of the ignored sequence (e.g., "Game["][ ]Over", "Game[ ]["]Over")
-            else if (i + 3 <= end && ((is_special(buffer[i + 1]) && buffer[i + 2] == ' ' && is_ignore(buffer[i + 3])) ||
-                (buffer[i + 1] == ' ' && is_special(buffer[i + 2]) && is_ignore(buffer[i + 3])))) {
-                i++;
-                ignore_part += buffer[i];
-                i++;
-                ignore_part += buffer[i];
-            }
-            // Skip any spaces that are part of the ignored sequence with special characters (e.g., "12[ ][+][ ]34")
-            else if (i + 4 <= end && buffer[i + 1] == ' ' && is_special(buffer[i + 2])
-                && buffer[i + 3] == ' ' && is_ignore(buffer[i + 4])) {
-                i++;
-                ignore_part += buffer[i];
-                i++;
-                ignore_part += buffer[i];
-                i++;
-                ignore_part += buffer[i];
-            }
-            // TODO: Ensure if the below condition is needed and correct
-            // Skip punctuation that is in end of line (e.g., "Game[:]")
-            else if (i + 1 == end && is_special(buffer[i + 1])) {
-                i++;
-                ignore_part += buffer[i];
-            }
-            // Skip sequence of special characters header and numbers (e.g., "Level[ ][1][:][ ]12"). (The condition "Level 1[:][ ]12" is not enough to skip
-            else if (i + 5 <= end && buffer[i + 1] == ' ' && is_ignore(buffer[i + 2]) && is_special(buffer[i + 3])
-                && buffer[i + 4] == ' ' && is_ignore(buffer[i + 5])){
-                i++;
-                ignore_part += buffer[i];
-                i++;
-                ignore_part += buffer[i];
-                i++;
-                ignore_part += buffer[i];
-                i++;
-                ignore_part += buffer[i];
-            }
-            i++;
-        }
-        else {
-            break;
         }
     }
-    (*start) = i;
-    return ignore_part;
-}
-
-Utf16String reverse_non_ignored(unichar_t *buffer, size_t *start, size_t end)
-{
-    // Reverse non-ignored sequences
-    size_t reverse_start = (*start);
-    while (reverse_start <= end) {
-        if (buffer[reverse_start] == ' ' && reverse_start + 1 <= end && is_ignore(buffer[reverse_start + 1])
-            || is_special(buffer[reverse_start]) && reverse_start + 1 <= end && is_ignore(buffer[reverse_start + 1])) {
-            break; // space or special followed by ignored char (e.g., "[+]34", "[ ]Over")
+    else if (str[i] == '%') {
+        // Matches literal "%%"
+        if (i + 1 < len && str[i+1] == '%') {
+            out_len = 2;
+            return true;
         }
-        reverse_start++;
-    }
-    size_t reverse_end = reverse_start - 1;
-    reverse_start = (*start);
-    Utf16String to_reverse;
-    if (reverse_start < reverse_end) { // 2 or more characters to reverse
-        for (size_t i = reverse_start; i <= reverse_end; ++i) {
-            to_reverse += buffer[i];
+        // Matches unbracketed formatters like %02d, %2.2d, %ls, etc.
+        size_t j = i + 1;
+        while (j < len && str[j] >= '0' && str[j] <= '9') j++;
+        if (j < len && str[j] == '.') {
+            j++;
+            while (j < len && str[j] >= '0' && str[j] <= '9') j++;
         }
-
-        unichar_t *word_start = const_cast<unichar_t *>(to_reverse.Str());
-        unichar_t *word_end = word_start + to_reverse.Get_Length() - 1;
-
-        while (word_start < word_end) {
-            std::swap(*word_start, *word_end);
-            ++word_start;
-            --word_end;
+        bool found_letter = false;
+        while (j < len && ((str[j] >= 'a' && str[j] <= 'z') || (str[j] >= 'A' && str[j] <= 'Z'))) {
+            found_letter = true;
+            j++;
         }
-    } else
-    {
-        if (reverse_start == reverse_end) { // 1 character to reverse
-            to_reverse += buffer[reverse_start];
+        if (found_letter) {
+            out_len = j - i;
+            return true;
         }
     }
-    (*start) = reverse_end + 1;
-    return to_reverse;
+    return false;
 }
 
-Utf16String reverse_line(unichar_t *buffer, size_t *start, size_t end)
-{
-    Utf16String reversed;
-    while ((*start) <= end) {
+#ifndef BUILD_WITH_ICU
+static unichar_t mirror_char(unichar_t c) {
+    switch (c) {
+        case '(': return ')'; case ')': return '(';
+        case '[': return ']'; case ']': return '[';
+        case '{': return '}'; case '}': return '{';
+        case '<': return '>'; case '>': return '<';
+        default: return c;
+    }
+}
 
-        Utf16String was_space;
-        while ((*start) <= end && buffer[(*start)] == ' ') {
-            was_space += U_CHAR(' ');
-            (*start)++;
-        }
+static bool is_ltr_or_num_or_pua(unichar_t c) {
+    return (c >= '0' && c <= '9') ||
+           (c >= 'A' && c <= 'Z') ||
+           (c >= 'a' && c <= 'z') ||
+           (c >= 0xE000 && c <= 0xE0FF); // Custom Private Use Area tokens
+}
 
-        Utf16String ignore_part = ignore_sequence(buffer, start, end);
-        ignore_part += reversed; // Add in the front
-        reversed = ignore_part;
+static Utf16String reverse_line_fallback(const unichar_t* buffer, size_t* start, size_t end) {
+    Utf16String reversed_line;
+    size_t i = *start;
 
-        Utf16String reverse_part = reverse_non_ignored(buffer, start, end);
-        was_space += reversed;
-        reverse_part += was_space;
-        reversed = reverse_part;
+    if (i > end) return reversed_line;
+    size_t len = end - i + 1;
+    unichar_t* temp = new unichar_t[len + 1];
 
-        while ((*start) <= end && buffer[(*start)] == ' ') {
-            Utf16String temp = U_CHAR(" ");
-            temp += reversed;
-            reversed = temp;
-            (*start)++;
+    for (size_t k = 0; k < len; ++k) {
+        temp[k] = mirror_char(buffer[end - k]);
+    }
+    temp[len] = U_CHAR('\0');
+
+    size_t run_start = 0;
+    while (run_start < len) {
+        if (is_ltr_or_num_or_pua(temp[run_start])) {
+            size_t run_end = run_start;
+            while (run_end + 1 < len && is_ltr_or_num_or_pua(temp[run_end + 1])) {
+                run_end++;
+            }
+            size_t rl = run_end - run_start + 1;
+            for (size_t k = 0; k < rl / 2; ++k) {
+                std::swap(temp[run_start + k], temp[run_end - k]);
+            }
+            run_start = run_end + 1;
+        } else {
+            run_start++;
         }
     }
-    return reversed;
+
+    reversed_line += temp;
+    delete[] temp;
+    *start = end + 1;
+    return reversed_line;
 }
+#endif
+
+// Shared helper function that runs BiDi logic safely on a single line
+// preserving Custom Engine Tokens via PUA (Private Use Area) masking.
+static Utf16String ProcessBiDiLine(const unichar_t* line_buf, size_t line_len) {
+    if (line_len == 0) return Utf16String();
+
+    std::vector<Utf16String> tokens;
+    unichar_t *working = new unichar_t[line_len + 1];
+    size_t w_idx = 0;
+
+    // 1. Scan line and replace engine tokens with sequential PUA characters
+    // to shield them from BiDi manipulation
+    for (size_t i = 0; i < line_len; ) {
+        size_t tok_len = 0;
+        if (is_token_at(line_buf, i, line_len, tok_len)) {
+            unichar_t* tok_buf = new unichar_t[tok_len + 1];
+            for (size_t k = 0; k < tok_len; ++k) tok_buf[k] = line_buf[i + k];
+            tok_buf[tok_len] = U_CHAR('\0');
+
+            tokens.push_back(Utf16String(tok_buf));
+            delete[] tok_buf;
+
+            // U+E000 acts as a strong LTR 'letter' mapping to the protected token
+            working[w_idx++] = static_cast<unichar_t>(0xE000 + tokens.size() - 1);
+            i += tok_len;
+        } else {
+            working[w_idx++] = line_buf[i++];
+        }
+    }
+    working[w_idx] = U_CHAR('\0');
+    size_t working_len = w_idx;
+
+    unichar_t* reordered = new unichar_t[working_len + 1];
+    int32_t out_len = 0;
+
+#if defined BUILD_WITH_ICU
+    UErrorCode errorCode = U_ZERO_ERROR;
+    UBiDi* bidi = ubidi_openSized(working_len, 0, &errorCode);
+    if (U_SUCCESS(errorCode)) {
+        ubidi_setPara(bidi, working, working_len, UBIDI_RTL, nullptr, &errorCode);
+        if (U_SUCCESS(errorCode)) {
+            out_len = ubidi_writeReordered(bidi, reordered, working_len + 1,
+                                 UBIDI_DO_MIRRORING | UBIDI_REMOVE_BIDI_CONTROLS,
+                                 &errorCode);
+        }
+        ubidi_close(bidi);
+    }
+    if (U_FAILURE(errorCode)) {
+        for(size_t k = 0; k <= working_len; ++k) reordered[k] = working[k];
+        out_len = working_len;
+    }
+#else
+    size_t start = 0;
+    Utf16String reversed = reverse_line_fallback(working, &start, working_len > 0 ? working_len - 1 : 0);
+    out_len = reversed.Get_Length();
+    for(size_t k = 0; k < out_len; ++k) reordered[k] = reversed.Get_Char(k);
+    reordered[out_len] = U_CHAR('\0');
+#endif
+
+    // 2. Expand PUA characters back to their exact original token string
+    size_t final_len = 0;
+    for (int32_t i = 0; i < out_len; ++i) {
+        unichar_t c = reordered[i];
+        if (c >= 0xE000 && c < 0xE000 + tokens.size()) {
+            final_len += tokens[c - 0xE000].Get_Length();
+        } else {
+            final_len += 1;
+        }
+    }
+
+    unichar_t* final_out = new unichar_t[final_len + 1];
+    size_t f_idx = 0;
+    for (int32_t i = 0; i < out_len; ++i) {
+        unichar_t c = reordered[i];
+        if (c >= 0xE000 && c < 0xE000 + tokens.size()) {
+            const unichar_t* tok_str = tokens[c - 0xE000].Str();
+            size_t t_len = tokens[c - 0xE000].Get_Length();
+            for(size_t k = 0; k < t_len; ++k) {
+                final_out[f_idx++] = tok_str[k];
+            }
+        } else {
+            final_out[f_idx++] = c;
+        }
+    }
+    final_out[final_len] = U_CHAR('\0');
+    Utf16String res(final_out);
+
+    delete[] final_out;
+    delete[] reordered;
+    delete[] working;
+
+    return res;
+}
+
+} // namespace
 
 void Utf16String::Reverse()
 {
-    // This function reverses the string for RTL languages while ensuring certain characters
-    // are not reversed. The skipping logic is as follows:
-    //
-    // 1. Characters considered "ignored" (e.g., English letters, digits, and %)
-    //    will not be reversed. These characters will remain in their original order within the string.
-    //
-    // 2. If a special char like comma, period, space or colon appears between two "ignored" characters (e.g., in numbers
-    //    like 1,000 | 25.14 | %.0f%% | 'New York' | %d.%02d.%d), the punctuation will be treated as part of the
-    //    "ignored" sequence and will not be reversed.
-    //
-    // 2.1. If a special char appears at the start or end of the sequence,
-    //    it will be treated as part of the "non-ignored" sequence (e.g., "Level : 1" -> "1 : leveL" when 'Level' is
-    //    non-English word).
-    //
-    // 2.2. If a space appears after a special/ignored char, it will check the next word/char for "ignored" status.
-    //
-    // 3. If a special char appears next to an "ignored" character but is followed by a non-ignored character
-    //    (e.g., a space or a letter), the special will be reversed along with the surrounding text.
-    //
-    // 4. Empty lines and `\n` character are skipped and not affected by the reversal.
-    //
-    // The function loops through the string, reverses it, and ensures the proper skipping and
-    // handling of "ignored" characters and special based on the above rules.
-
-    if (m_data == nullptr) {
-        return;
-    }
+    // Generates a legacy visual LTR layout from logical RTL text.
+    if (m_data == nullptr) return;
 
     size_type len = Get_Length();
-    if (len <= 1) {
-        return;
-    }
+    if (len <= 1) return;
 
-    unichar_t *buffer = Get_Buffer_For_Read(len);
+    unichar_t *original = Peek();
+    Utf16String final_result;
 
-    size_t *start = new size_t;
-    *start = 0;
-    size_t end = len - 1;
+    size_t start = 0;
+    while (start < len) {
+        // Find next boundary separator: standard '\n' OR legacy engine tag "{\n}"
+        size_t end = start;
+        bool is_bracket_nl = false;
 
-    // Buffer to hold the reversed parts of the string
-    Utf16String to_reversed;
-    Utf16String ignore_part;
-    while ((*start) <= end) {
-        // Skip breaks and new lines
-        Utf16String break_char;
-        while (buffer[(*start)] == '\n') {
-            break_char += U_CHAR("\n");
-            (*start)++;
+        while (end < len) {
+            if (original[end] == '\n') break;
+            if (end + 2 < len && original[end] == '{' && original[end+1] == '\n' && original[end+2] == '}') {
+                is_bracket_nl = true;
+                break;
+            }
+            end++;
         }
 
-        size_t end_line = (*start);
-        while (end_line <= end && buffer[end_line] != '\n') {
-            end_line++;
+        // Extract the line independently to guarantee vertical order
+        size_t line_len = end - start;
+        unichar_t* line_buf = new unichar_t[line_len + 1];
+        for (size_t k = 0; k < line_len; ++k) {
+            line_buf[k] = original[start + k];
         }
-        // sent the line to function to reverse it
-        Utf16String reversed = reverse_line(buffer, start, end_line - 1);
-        to_reversed += break_char;
-        to_reversed += reversed;
+        line_buf[line_len] = U_CHAR('\0');
+
+        // Apply string BiDi manipulation safely on line chunk
+        Utf16String processed_line = ProcessBiDiLine(line_buf, line_len);
+        final_result += processed_line;
+        delete[] line_buf;
+
+        // Reattach exact line separator untouched
+        if (end < len) {
+            if (is_bracket_nl) {
+                final_result += U_CHAR('{');
+                final_result += U_CHAR('\n');
+                final_result += U_CHAR('}');
+                start = end + 3;
+            } else {
+                final_result += U_CHAR('\n');
+                start = end + 1;
+            }
+        } else {
+            start = end;
+        }
     }
 
-    // Update the buffer with the final result
-    if (ignore_part.Get_Length() > 0 && to_reversed.Is_Empty()) {
-        Set(ignore_part);
-    } else {
-        ignore_part += to_reversed;
-        to_reversed = ignore_part;
-        Set(to_reversed);
-    }
-    delete start;
+    Set(final_result);
 }
 
 void Utf16String::To_Lower()

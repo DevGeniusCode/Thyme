@@ -849,6 +849,10 @@ void GameTextFile::Read_STR_File_T(FileRef &file, StringInfosType &string_infos,
 
             case StrReadStep::TEXT:
                 if (languages.has(read_language)) {
+                    if (read_language == LanguageID::UNKNOWN)
+                    {
+                        options = Options::Value::RTL_REVERSE;
+                    }
                     Parse_STR_Text(buf, Get_Text(string_info, read_language), options);
                 }
                 Change_Step(step, StrReadStep::SEARCH, eol_chars);
@@ -1155,6 +1159,10 @@ bool GameTextFile::Write_Multi_STR_Entry(
     For_Each_Language(languages, [&](LanguageID language) {
         const size_t index = static_cast<size_t>(language);
         ok &= Write_STR_Language(file, language);
+        if (language == LanguageID::UNKNOWN)
+        {
+            options = Options::Value::RTL_REVERSE;
+        }
         ok &= Write_STR_Text(file, string_info.text[index], options, buf, str);
     });
 
