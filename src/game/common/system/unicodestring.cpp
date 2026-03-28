@@ -437,8 +437,15 @@ static unichar_t mirror_char(unichar_t c) {
     }
 }
 
-static bool is_ltr_or_num_or_pua(unichar_t c) {
+// Helper block to safely encapsulate digit testing, including Arabic-Indic numerals
+static bool is_digit(unichar_t c) {
     return (c >= '0' && c <= '9') ||
+           (c >= 0x0660 && c <= 0x0669) || // Arabic-Indic digits
+           (c >= 0x06F0 && c <= 0x06F9);   // Eastern Arabic-Indic digits
+}
+
+static bool is_ltr_or_num_or_pua(unichar_t c) {
+    return is_digit(c) ||
            (c >= 'A' && c <= 'Z') ||
            (c >= 'a' && c <= 'z') ||
            (c >= 0xE000 && c <= 0xE0FF); // Custom Private Use Area tokens
@@ -461,8 +468,19 @@ static Utf16String reverse_line_fallback(const unichar_t* buffer, size_t* start,
     while (run_start < len) {
         if (is_ltr_or_num_or_pua(temp[run_start])) {
             size_t run_end = run_start;
-            while (run_end + 1 < len && is_ltr_or_num_or_pua(temp[run_end + 1])) {
+            while (run_end + 1 < len) {
+                if (is_ltr_or_num_or_pua(temp[run_end + 1])) {
                 run_end++;
+                } else if ((temp[run_end + 1] == ':' || temp[run_end + 1] == '.' || temp[run_end + 1] == ',') &&
+                           is_digit(temp[run_end]) &&
+                           run_end + 2 < len &&
+                           is_digit(temp[run_end + 2])) {
+                    // Prevent splitting digits separated by standard neutral punctuation (colons, periods, commas).
+                    // This ensures time formats like '1:00' and decimals like '1.00' stay as a single LTR run.
+                    run_end += 2;
+                } else {
+                    break;
+                }
             }
             size_t rl = run_end - run_start + 1;
             for (size_t k = 0; k < rl / 2; ++k) {
