@@ -936,6 +936,51 @@ void GameTextFile::Parse_STR_Text(Utf8Array &buf, Utf16String &text, Options opt
         rts::Strip_Obsolete_Spaces(buf.data());
     }
 
+    // --- Resolve tags {} ---
+    {
+        char* str = buf.data();
+        size_t s_len = strlen(str);
+        char* resolved = new char[s_len + 1];
+        size_t r_idx = 0;
+
+        for (size_t i = 0; i < s_len; ++i) {
+            if (str[i] == '{') {
+                size_t j = i + 1;
+                while (j < s_len && str[j] != '}') {
+                    j++;
+                }
+
+                if (j < s_len && str[j] == '}') {
+                    size_t tag_len = j - i - 1;
+                    if (tag_len == 1 && str[i + 1] == '\n') {
+                        // {\n} -> literal \n
+                        resolved[r_idx++] = '\n';
+                    }
+                    else if (tag_len == 1 && ((str[i + 1] >= 'a' && str[i + 1] <= 'z') || (str[i + 1] >= 'A' && str[i + 1] <= 'Z'))) {
+                        // Hotkey: {M} -> &M (The SAGE engine highlights characters prefixed with '&')
+                        resolved[r_idx++] = '&';
+                        resolved[r_idx++] = str[i + 1];
+                    }
+                    else {
+                        // Strip braces entirely, copy inner content only (e.g. {1000} -> 1000)
+                        for (size_t k = i + 1; k < j; ++k) {
+                            resolved[r_idx++] = str[k];
+                        }
+                    }
+                    i = j; // Skip past the closing '}'
+                } else {
+                    resolved[r_idx++] = str[i]; // Unmatched '{', copy as-is
+                }
+            } else {
+                resolved[r_idx++] = str[i];
+            }
+        }
+        resolved[r_idx] = '\0';
+        strcpy(str, resolved); // Safe because the resolved length is always <= the original length
+        delete[] resolved;
+    }
+    // --- END PRE-PROCESSING ---
+
     // Translate final UTF16 string.
     text.Translate(buf.data());
 
