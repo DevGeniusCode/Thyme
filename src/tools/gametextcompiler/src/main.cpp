@@ -106,7 +106,7 @@ All|English|German|French|Spanish|Italian|Japanese|Korean|Chinese|Brazilian|Poli
 
 OPTION:enum
 OPTION takes one [1] or multiple [n] options, separated by pipe:
-None|Check_Buffer_Length_On_Load|Check_Buffer_Length_On_Save|RTL_Reverse
+None|Check_Buffer_Length_On_Load|Check_Buffer_Length_On_Save|
 Keep_Obsolete_Spaces_On_Load|Write_Extra_LF_On_STR_Save|Optimize_Memory_Size
 )#");
 //       1         2         3         4         5         6         7         8         9        10        11        12
@@ -153,9 +153,6 @@ Example 2: Convert an STR file to CSF format with given language
 
 Example 3: Load a specific language from a multi-language file and save to a CSF file
   > gametextcompiler.exe -load_str_languages English -load_str D:\generals.str -save_csf D:\generals.csf
-
-Example 4: Convert a CSF file to STR format with RTL reversing
-  > gametextcompiler.exe -load_csf D:\generals.csf -save_str D:\generals.str -options RTL_REVERSE
 )#");
 }
 // clang-format on

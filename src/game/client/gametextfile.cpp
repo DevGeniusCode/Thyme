@@ -51,6 +51,25 @@ namespace Thyme
 
 namespace
 {
+// Helper to detect if a string contains RTL characters (Hebrew/Arabic blocks)
+bool Has_RTL(const Utf16String& text)
+{
+    const size_t len = text.Get_Length();
+    const unichar_t* str = text.Str();
+    for (size_t i = 0; i < len; ++i) {
+        unichar_t c = str[i];
+        if ((c >= 0x0590 && c <= 0x05FF) || // Hebrew
+            (c >= 0x0600 && c <= 0x06FF) || // Arabic
+            (c >= 0x0750 && c <= 0x077F) || // Arabic Supplement
+            (c >= 0x08A0 && c <= 0x08FF) || // Arabic Extended-A
+            (c >= 0xFB50 && c <= 0xFDFF) || // Arabic Presentation Forms-A
+            (c >= 0xFE70 && c <= 0xFEFF)) { // Arabic Presentation Forms-B
+            return true;
+        }
+    }
+    return false;
+}
+
 template<typename IntegerType> constexpr size_t Bit_To_Index(IntegerType integer)
 {
     using UnsignedInt = UnsignedIntegerT<IntegerType>;
@@ -69,7 +88,6 @@ constexpr const char *const s_option_2 = "Check_Buffer_Length_On_Load";
 constexpr const char *const s_option_3 = "Check_Buffer_Length_On_Save";
 constexpr const char *const s_option_4 = "Keep_Obsolete_Spaces_On_Load";
 constexpr const char *const s_option_5 = "Write_Extra_LF_On_STR_Save";
-constexpr const char *const s_option_6 = "RTL_Reverse";
 
 constexpr const char *const s_options[] = {
     s_option_0,
@@ -78,7 +96,6 @@ constexpr const char *const s_options[] = {
     s_option_3,
     s_option_4,
     s_option_5,
-    s_option_6,
 };
 
 static_assert(s_option_0 == s_options[size_t(GameTextOption::NONE)]);
@@ -87,7 +104,6 @@ static_assert(s_option_2 == s_options[1 + Bit_To_Index(GameTextOption::CHECK_BUF
 static_assert(s_option_3 == s_options[1 + Bit_To_Index(GameTextOption::CHECK_BUFFER_LENGTH_ON_SAVE)]);
 static_assert(s_option_4 == s_options[1 + Bit_To_Index(GameTextOption::KEEP_OBSOLETE_SPACES_ON_LOAD)]);
 static_assert(s_option_5 == s_options[1 + Bit_To_Index(GameTextOption::WRITE_EXTRA_LF_ON_STR_SAVE)]);
-static_assert(s_option_6 == s_options[1 + Bit_To_Index(GameTextOption::RTL_REVERSE)]);
 } // namespace
 
 bool Name_To_Game_Text_Option(const char *name, GameTextOption &option)
@@ -849,10 +865,6 @@ void GameTextFile::Read_STR_File_T(FileRef &file, StringInfosType &string_infos,
 
             case StrReadStep::TEXT:
                 if (languages.has(read_language)) {
-                    if (read_language == LanguageID::UNKNOWN)
-                    {
-                        options = Options::Value::RTL_REVERSE;
-                    }
                     Parse_STR_Text(buf, Get_Text(string_info, read_language), options);
                 }
                 Change_Step(step, StrReadStep::SEARCH, eol_chars);
@@ -926,8 +938,10 @@ void GameTextFile::Parse_STR_Text(Utf8Array &buf, Utf16String &text, Options opt
 
     // Translate final UTF16 string.
     text.Translate(buf.data());
-    if (options.has(Options::Value::RTL_REVERSE)) {
-        text.Reverse();
+
+    // Logical (STR) to Visual (In-Memory CSF) if it contains RTL letters.
+    if (Has_RTL(text)) {
+        text.Reverse(false);
     }
 
 }
@@ -1159,10 +1173,6 @@ bool GameTextFile::Write_Multi_STR_Entry(
     For_Each_Language(languages, [&](LanguageID language) {
         const size_t index = static_cast<size_t>(language);
         ok &= Write_STR_Language(file, language);
-        if (language == LanguageID::UNKNOWN)
-        {
-            options = Options::Value::RTL_REVERSE;
-        }
         ok &= Write_STR_Text(file, string_info.text[index], options, buf, str);
     });
 
@@ -1232,11 +1242,11 @@ bool GameTextFile::Write_STR_Label(FileRef &file, const Utf8String &label)
 
 bool GameTextFile::Write_STR_Text(FileRef &file, const Utf16String &text, Options options, Utf8Array &buf, Utf8String &str)
 {
-    // Convert utf16 to utf8.
-    if (options.has(Options::Value::RTL_REVERSE)) {
+    // Convert utf16 to utf8. Auto-Detect Visual-to-Logical Reversal
+    if (Has_RTL(text)) {
         Utf16String reversed;
         reversed.Set(text.Str()); // Copy the string to avoid modifying the original.
-        reversed.Reverse();
+        reversed.Reverse(true);   // Revert Visual layout back to Logical layout
         str.Translate(reversed.Str());
     }
     else {

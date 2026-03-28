@@ -487,7 +487,7 @@ static Utf16String reverse_line_fallback(const unichar_t* buffer, size_t* start,
 
 // Shared helper function that runs BiDi logic safely on a single line
 // preserving Custom Engine Tokens via PUA (Private Use Area) masking.
-static Utf16String ProcessBiDiLine(const unichar_t* line_buf, size_t line_len) {
+static Utf16String ProcessBiDiLine(const unichar_t* line_buf, size_t line_len, bool visualToLogical) {
     if (line_len == 0) return Utf16String();
 
     std::vector<Utf16String> tokens;
@@ -523,6 +523,8 @@ static Utf16String ProcessBiDiLine(const unichar_t* line_buf, size_t line_len) {
     UErrorCode errorCode = U_ZERO_ERROR;
     UBiDi* bidi = ubidi_openSized(working_len, 0, &errorCode);
     if (U_SUCCESS(errorCode)) {
+        // Tells the BiDi Engine whether to work forward or backward!
+        ubidi_setInverse(bidi, visualToLogical);
         ubidi_setPara(bidi, working, working_len, UBIDI_RTL, nullptr, &errorCode);
         if (U_SUCCESS(errorCode)) {
             out_len = ubidi_writeReordered(bidi, reordered, working_len + 1,
@@ -536,6 +538,8 @@ static Utf16String ProcessBiDiLine(const unichar_t* line_buf, size_t line_len) {
         out_len = working_len;
     }
 #else
+    // The manual fallback mirrors perfectly in both directions, so we don't
+    // even need to alter its logic to support Visual-To-Logical reversals!
     size_t start = 0;
     Utf16String reversed = reverse_line_fallback(working, &start, working_len > 0 ? working_len - 1 : 0);
     out_len = reversed.Get_Length();
@@ -580,9 +584,9 @@ static Utf16String ProcessBiDiLine(const unichar_t* line_buf, size_t line_len) {
 
 } // namespace
 
-void Utf16String::Reverse()
+void Utf16String::Reverse(bool visualToLogical)
 {
-    // Generates a legacy visual LTR layout from logical RTL text.
+    // Generates a legacy visual LTR layout from logical RTL text (or vice versa).
     if (m_data == nullptr) return;
 
     size_type len = Get_Length();
@@ -615,7 +619,7 @@ void Utf16String::Reverse()
         line_buf[line_len] = U_CHAR('\0');
 
         // Apply string BiDi manipulation safely on line chunk
-        Utf16String processed_line = ProcessBiDiLine(line_buf, line_len);
+        Utf16String processed_line = ProcessBiDiLine(line_buf, line_len, visualToLogical);
         final_result += processed_line;
         delete[] line_buf;
 
