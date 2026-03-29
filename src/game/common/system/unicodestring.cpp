@@ -393,18 +393,7 @@ namespace {
 
 // Checks for explicit SAGE engine placeholders so they can be isolated from BiDi logic.
 static bool is_token_at(const unichar_t* str, size_t i, size_t len, size_t& out_len) {
-    if (str[i] == '{') {
-        // Matches engine placeholders like {%s}, {&G}, {%.0f%%}
-        if (i + 1 < len && (str[i+1] == '%' || str[i+1] == '&')) {
-            size_t j = i + 2;
-            while (j < len && str[j] != '}') j++;
-            if (j < len && str[j] == '}') {
-                out_len = j - i + 1;
-                return true;
-            }
-        }
-    }
-    else if (str[i] == '%') {
+  if (str[i] == '%') {
         // Matches literal "%%"
         if (i + 1 < len && str[i+1] == '%') {
             out_len = 2;
@@ -425,6 +414,13 @@ static bool is_token_at(const unichar_t* str, size_t i, size_t len, size_t& out_
         if (found_letter) {
             out_len = j - i;
             return true;
+    }
+  }
+  else if (str[i] == '&') {
+    // Protect SAGE hotkey markers like &M so they don't get displaced during BiDi
+    if (i + 1 < len && ((str[i+1] >= 'a' && str[i+1] <= 'z') || (str[i+1] >= 'A' && str[i+1] <= 'Z') || (str[i+1] >= '0' && str[i+1] <= '9'))) {
+      out_len = 2;
+      return true;
         }
     }
     return false;
